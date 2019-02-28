@@ -18,11 +18,7 @@ from rest_framework_filters.backends import DjangoFilterBackend
 from ..filters import GroupFilter, UserFilter
 
 # Exports.
-__all__ = (
-    'authorization',
-    'UserViewSet',
-    'GroupViewSet',
-)
+__all__ = ('authorization', 'UserViewSet', 'GroupViewSet')
 
 
 class IsStaffOrTargetUser(permissions.BasePermission):
@@ -39,7 +35,9 @@ class IsSuperuserOrReadOnly(permissions.BasePermission):
     """Permission class for group endpoint."""
 
     def has_permission(self, request, view):
-        return request.method in permissions.SAFE_METHODS or (request.user and request.user.is_superuser)
+        return request.method in permissions.SAFE_METHODS or (
+            request.user and request.user.is_superuser
+        )
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -49,8 +47,16 @@ class UserSerializer(serializers.ModelSerializer):
         """Serializer configuration."""
 
         model = get_user_model()
-        fields = ('id', 'first_name', 'last_name', 'username', 'password', 'email',
-                  'date_joined', 'last_login')
+        fields = (
+            'id',
+            'first_name',
+            'last_name',
+            'username',
+            'password',
+            'email',
+            'date_joined',
+            'last_login',
+        )
         extra_kwargs = {'password': {'write_only': True}}
 
 
@@ -60,7 +66,9 @@ class GroupSerializer(serializers.ModelSerializer):
     # NOTE: All groups can be seen by all authenticated users. So we
     #       don't want to reveal anything more than primary keys of
     #       users in groups.
-    users = serializers.PrimaryKeyRelatedField(source='user_set', read_only=True, many=True)
+    users = serializers.PrimaryKeyRelatedField(
+        source='user_set', read_only=True, many=True
+    )
 
     class Meta:
         """Serializer configuration."""
@@ -69,7 +77,9 @@ class GroupSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'users')
 
 
-class ChangePasswordSerializer(serializers.Serializer):  # pylint: disable=abstract-method
+class ChangePasswordSerializer(
+    serializers.Serializer
+):  # pylint: disable=abstract-method
     """Serializer for changing the user password."""
 
     existing_password = serializers.CharField()
@@ -82,24 +92,30 @@ class ActivationSerializer(serializers.Serializer):  # pylint: disable=abstract-
     token = serializers.CharField()
 
 
-class PasswordResetRequestSerializer(serializers.Serializer):  # pylint: disable=abstract-method
+class PasswordResetRequestSerializer(
+    serializers.Serializer
+):  # pylint: disable=abstract-method
     """Serializer for requesting a password reset."""
 
     username = serializers.CharField()
     community = serializers.CharField(required=False)
 
 
-class PasswordResetSerializer(serializers.Serializer):  # pylint: disable=abstract-method
+class PasswordResetSerializer(
+    serializers.Serializer
+):  # pylint: disable=abstract-method
     """Serializer for password reset."""
 
     token = serializers.CharField()
     password = serializers.CharField()
 
 
-class UserViewSet(mixins.ListModelMixin,
-                  mixins.CreateModelMixin,
-                  mixins.UpdateModelMixin,
-                  viewsets.GenericViewSet):
+class UserViewSet(
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet,
+):
     """API view for :class:`User` objects."""
 
     serializer_class = UserSerializer
@@ -122,9 +138,13 @@ class UserViewSet(mixins.ListModelMixin,
         if user.is_superuser:
             return user_model.objects.all().select_related('profile')
         elif user.is_authenticated:
-            return user_model.objects.filter(
-                Q(groups__in=user.groups.all()) | Q(pk=user.pk)
-            ).distinct('id').select_related('profile')
+            return (
+                user_model.objects.filter(
+                    Q(groups__in=user.groups.all()) | Q(pk=user.pk)
+                )
+                .distinct('id')
+                .select_related('profile')
+            )
         else:
             return user_model.objects.none()
 
@@ -136,17 +156,21 @@ class UserViewSet(mixins.ListModelMixin,
             user_model = get_user_model()
             try:
                 user = user_model.objects.get(
-                    Q(username=serializer.data['username']) | Q(email=serializer.data['username'])
+                    Q(username=serializer.data['username'])
+                    | Q(email=serializer.data['username'])
                 )
             except (user_model.DoesNotExist, user_model.MultipleObjectsReturned):
-                return Response({'error': "User does not exist."},
-                                status=status.HTTP_404_NOT_FOUND)
+                return Response(
+                    {'error': "User does not exist."}, status=status.HTTP_404_NOT_FOUND
+                )
 
             send_reset_email(user, community=serializer.data.get('community', None))
             return Response({})
         else:
-            return Response({'error': "Malformed password reset request."},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {'error': "Malformed password reset request."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
     @list_route(methods=['post'])
     def password_reset(self, request):
@@ -154,17 +178,18 @@ class UserViewSet(mixins.ListModelMixin,
         serializer = PasswordResetSerializer(data=request.data)
         if serializer.is_valid():
             try:
-                reset_password(
-                    serializer.data['token'],
-                    serializer.data['password'],
-                )
+                reset_password(serializer.data['token'], serializer.data['password'])
                 return Response({})
             except ValueError:
-                return Response({'error': "Bad password reset token."},
-                                status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {'error': "Bad password reset token."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
         else:
-            return Response({'error': "Malformed password reset request."},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {'error': "Malformed password reset request."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
     @list_route(methods=['post'])
     def activate_account(self, request):
@@ -175,11 +200,15 @@ class UserViewSet(mixins.ListModelMixin,
                 user = activate_account(serializer.data['token'])
                 return Response({'username': user.username})
             except ValueError:
-                return Response({'error': "Bad activation token."},
-                                status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {'error': "Bad activation token."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
         else:
-            return Response({'error': "Malformed activation request."},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {'error': "Malformed activation request."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
     @detail_route(methods=['post'])
     def change_password(self, request, pk=None):
@@ -188,22 +217,26 @@ class UserViewSet(mixins.ListModelMixin,
         serializer = ChangePasswordSerializer(data=request.data)
         if serializer.is_valid():
             if not user.check_password(serializer.data['existing_password']):
-                return Response({'error': "Incorrect password."},
-                                status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {'error': "Incorrect password."}, status=status.HTTP_400_BAD_REQUEST
+                )
 
             user.set_password(serializer.data['new_password'])
             user.save()
             update_session_auth_hash(request, user)
             return Response({})
         else:
-            return Response({'error': "Malformed password."},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {'error': "Malformed password."}, status=status.HTTP_400_BAD_REQUEST
+            )
 
 
-class GroupViewSet(mixins.ListModelMixin,
-                   mixins.CreateModelMixin,
-                   mixins.UpdateModelMixin,
-                   viewsets.GenericViewSet):
+class GroupViewSet(
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet,
+):
     """API view for :class:`Group` objects."""
 
     serializer_class = GroupSerializer
@@ -285,12 +318,16 @@ def authorization(request):
 
         # Session authentication.
         pub_user = AnonymousUser()
-        if pub_user.has_perm('view_data', data) and pub_user.has_perm('download_data', data):
+        if pub_user.has_perm('view_data', data) and pub_user.has_perm(
+            'download_data', data
+        ):
             return HttpResponse(status=200)
 
-        if (request.user.is_authenticated and
-                request.user.has_perm('view_data', data) and
-                request.user.has_perm('download_data', data)):
+        if (
+            request.user.is_authenticated
+            and request.user.has_perm('view_data', data)
+            and request.user.has_perm('download_data', data)
+        ):
             return HttpResponse(status=200)
 
     return HttpResponse(status=403)

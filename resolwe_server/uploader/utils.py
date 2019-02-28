@@ -61,7 +61,9 @@ def _remove_file(fn):
             raise
 
 
-def uploader(request_method, post_data, session_id, file_uid, secret_key, upload_dir, response):
+def uploader(
+    request_method, post_data, session_id, file_uid, secret_key, upload_dir, response
+):
     """Receive uploaded chunks and combine them into one file.
 
     :param str request_method: HTTP request method
@@ -121,12 +123,18 @@ def uploader(request_method, post_data, session_id, file_uid, secret_key, upload
             data = json.dumps({'resume_offset': new_offset})
             return response(201, data)
         elif new_offset == content_total:
-            data = json.dumps({'files': [
-                {'name': post_data['filename'],
-                 'temp': upload_id,
-                 'size': content_total,
-                 'done': True},
-            ]})
+            data = json.dumps(
+                {
+                    'files': [
+                        {
+                            'name': post_data['filename'],
+                            'temp': upload_id,
+                            'size': content_total,
+                            'done': True,
+                        }
+                    ]
+                }
+            )
             _remove_file(filetemp + '.status')
             return response(200, data)
         else:

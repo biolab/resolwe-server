@@ -11,18 +11,20 @@ from wsgiref.util import FileWrapper
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseServerError, Http404
+from django.http import (
+    HttpResponse,
+    HttpResponseBadRequest,
+    HttpResponseServerError,
+    Http404,
+)
 from django.shortcuts import redirect
 
 from ..base.views import authorization
 
-from . utils import uploader, get_upload_id, _remove_file
+from .utils import uploader, get_upload_id, _remove_file
 
 # Exports.
-__all__ = (
-    'file_upload',
-    'file_download',
-)
+__all__ = ('file_upload', 'file_download')
 
 
 logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
@@ -30,13 +32,16 @@ logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 def upload_lock(upload_function):
     """Prevent upload of the same file in multiple threads."""
+
     def new_upload(request):
         """Upload details."""
         session_id = request.META.get('HTTP_SESSION_ID', None)
         file_uid = request.META.get('HTTP_X_FILE_UID', None)
 
         if session_id is None or file_uid is None:
-            return HttpResponseBadRequest("Session-Id and X-File-Uid must be given in header")
+            return HttpResponseBadRequest(
+                "Session-Id and X-File-Uid must be given in header"
+            )
 
         upload_id = get_upload_id(session_id, file_uid, settings.SECRET_KEY)
 
@@ -66,6 +71,7 @@ def upload_lock(upload_function):
 @upload_lock
 def file_upload(request):
     """Chunked upload."""
+
     def response_func(status, data='', content_type='text/plain'):
         """Format response."""
         return HttpResponse(content=data, content_type=content_type, status=status)
@@ -92,7 +98,15 @@ def file_upload(request):
             logger.warning(msg)
             return response_func(400, msg)
 
-    return uploader(request_method, post_data, session_id, file_uid, secret_key, upload_dir, response_func)
+    return uploader(
+        request_method,
+        post_data,
+        session_id,
+        file_uid,
+        secret_key,
+        upload_dir,
+        response_func,
+    )
 
 
 def file_download(request, data_id, uri, token=None, gzip_header=False):
@@ -172,10 +186,7 @@ def file_download(request, data_id, uri, token=None, gzip_header=False):
 
     content_type, charset = mimetypes.guess_type(filename)
 
-    response_kwargs = {
-        'content_type': content_type,
-        'charset': charset,
-    }
+    response_kwargs = {'content_type': content_type, 'charset': charset}
 
     if 'HTTP_RANGE' in request.META:
         fhandle = open(filename, 'rb')
@@ -188,7 +199,11 @@ def file_download(request, data_id, uri, token=None, gzip_header=False):
 
         wrapper = FileWrapper(fhandle)
         response = HttpResponse(wrapper, status=206, **response_kwargs)
-        response['Content-Range'] = 'bytes %d-%d/%d' % (range_params[0], range_params[1], total_len)
+        response['Content-Range'] = 'bytes %d-%d/%d' % (
+            range_params[0],
+            range_params[1],
+            total_len,
+        )
         response['Accept-Ranges'] = 'bytes'
     else:
         resp_len = total_len
@@ -199,7 +214,9 @@ def file_download(request, data_id, uri, token=None, gzip_header=False):
         response['Content-Encoding'] = 'gzip'
 
     if request.GET.get('force_download', None) == '1':
-        response['Content-Disposition'] = 'attachment; filename="{}"'.format(os.path.basename(filename))
+        response['Content-Disposition'] = 'attachment; filename="{}"'.format(
+            os.path.basename(filename)
+        )
 
     response['Content-Description'] = 'File Transfer'
     response['Content-Length'] = resp_len

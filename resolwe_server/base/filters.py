@@ -24,7 +24,9 @@ class JsonOrderingFilter(OrderingFilter):
             # When a dot is present in the order field, treat it as a JSON path.
             if '.' not in field:
                 order_fields.extend(
-                    super(JsonOrderingFilter, self).remove_invalid_fields(queryset, [field], view, request)
+                    super(JsonOrderingFilter, self).remove_invalid_fields(
+                        queryset, [field], view, request
+                    )
                 )
                 continue
 
@@ -32,7 +34,9 @@ class JsonOrderingFilter(OrderingFilter):
             base_field = path[0]
             if len(path) < 2:
                 continue
-            if not super(JsonOrderingFilter, self).remove_invalid_fields(queryset, [base_field], view, request):
+            if not super(JsonOrderingFilter, self).remove_invalid_fields(
+                queryset, [base_field], view, request
+            ):
                 continue
 
             reverse = False
@@ -46,7 +50,8 @@ class JsonOrderingFilter(OrderingFilter):
                 model_meta = queryset.model._meta  # pylint: disable=protected-access
                 base_field = '{}.{}'.format(
                     quote_name(model_meta.db_table),
-                    quote_name(model_meta.get_field(base_field).column))
+                    quote_name(model_meta.get_field(base_field).column),
+                )
             except FieldDoesNotExist:
                 continue
 
@@ -60,7 +65,7 @@ class JsonOrderingFilter(OrderingFilter):
             expression = RawSQL(
                 # We can use base_field here directly because we've resolved it via Django ORM.
                 '{}{}'.format(base_field, placeholders),
-                params=path[1:]
+                params=path[1:],
             )
 
             if reverse:
@@ -97,6 +102,4 @@ class UserFilter(filters.FilterSet):
         """Filter configuration."""
 
         model = get_user_model()
-        fields = [
-            'id', 'username', 'first_name', 'last_name', 'groups'
-        ]
+        fields = ['id', 'username', 'first_name', 'last_name', 'groups']

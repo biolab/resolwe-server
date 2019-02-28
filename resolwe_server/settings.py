@@ -27,7 +27,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_reactive',
@@ -38,13 +37,11 @@ INSTALLED_APPS = [
     'corsheaders',
     'channels',
     'django_filters',
-
     'resolwe',
     'resolwe.permissions',
     'resolwe.flow',
     'resolwe.elastic',
     'resolwe.toolkit',
-
     'resolwe_server.base',
     'resolwe_server.uploader',
 ]
@@ -74,9 +71,9 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-            ],
+            ]
         },
-    },
+    }
 ]
 
 WSGI_APPLICATION = 'resolwe_server.wsgi.application'
@@ -85,17 +82,11 @@ WSGI_APPLICATION = 'resolwe_server.wsgi.application'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'
     },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
 # Internationalization
@@ -112,9 +103,7 @@ STATIC_URL = '/static/'
 
 # CORS
 
-CORS_ORIGIN_REGEX_WHITELIST = (
-    r'^(https?:\/\/)?(\w+\.)?(localhost|127.0.0.1)(:\d+)$',
-)
+CORS_ORIGIN_REGEX_WHITELIST = (r'^(https?:\/\/)?(\w+\.)?(localhost|127.0.0.1)(:\d+)$',)
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -139,10 +128,8 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': 55432,
         'CONN_MAX_AGE': 0,
-        'OPTIONS': {
-            'MAX_CONNS': 20,
-        },
-    },
+        'OPTIONS': {'MAX_CONNS': 20},
+    }
 }
 
 AUTHENTICATION_BACKENDS = (
@@ -176,9 +163,7 @@ manager_prefix = 'resolwe-server.manager'
 FLOW_MANAGER = {
     'REDIS_PREFIX': manager_prefix,
     'REDIS_CONNECTION': REDIS_CONNECTION,
-    'TEST': {
-        'REDIS_PREFIX': manager_prefix + '-test',
-    },
+    'TEST': {'REDIS_PREFIX': manager_prefix + '-test'},
     'DISPATCHER_MAPPING': {
         'Interactive': 'resolwe.flow.managers.workload_connectors.celery',
         'Batch': 'resolwe.flow.managers.workload_connectors.celery',
@@ -188,21 +173,14 @@ FLOW_MANAGER = {
 # Don't pull Docker images up front
 FLOW_DOCKER_DONT_PULL = True
 
-FLOW_API = {
-    'PERMISSIONS': 'resolwe.permissions.permissions',
-}
+FLOW_API = {'PERMISSIONS': 'resolwe.permissions.permissions'}
 FLOW_EXPRESSION_ENGINES = [
-    {
-        'ENGINE': 'resolwe.flow.expression_engines.jinja',
-        'CUSTOM_FILTERS': [
-
-        ]
-    },
+    {'ENGINE': 'resolwe.flow.expression_engines.jinja', 'CUSTOM_FILTERS': []}
 ]
 FLOW_EXECUTION_ENGINES = [
     'resolwe.flow.execution_engines.bash',
     'resolwe.flow.execution_engines.workflow',
-    'resolwe.flow.execution_engines.python'
+    'resolwe.flow.execution_engines.python',
 ]
 
 
@@ -211,17 +189,11 @@ FLOW_PROCESSES_FINDERS = (
     'resolwe.flow.finders.AppDirectoriesFinder',
 )
 
-FLOW_PROCESSES_DIRS = (
-    os.path.join(PROJECT_ROOT, 'resolwe_server', 'processes'),
-)
+FLOW_PROCESSES_DIRS = (os.path.join(PROJECT_ROOT, 'resolwe_server', 'processes'),)
 
-FLOW_DESCRIPTORS_DIRS = (
-    os.path.join(PROJECT_ROOT, 'resolwe_server', 'descriptors'),
-)
+FLOW_DESCRIPTORS_DIRS = (os.path.join(PROJECT_ROOT, 'resolwe_server', 'descriptors'),)
 
-RESOLWE_CUSTOM_TOOLS_PATHS = [
-    os.path.join(PROJECT_ROOT, 'resolwe_server', 'tools'),
-]
+RESOLWE_CUSTOM_TOOLS_PATHS = [os.path.join(PROJECT_ROOT, 'resolwe_server', 'tools')]
 
 FLOW_DOCKER_VOLUME_EXTRA_OPTIONS = {
     'data': 'Z',
@@ -256,9 +228,7 @@ CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
         'LOCATION': 'redis://{host}:{port}/{db}'.format(**REDIS_CONNECTION),
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        }
+        'OPTIONS': {'CLIENT_CLASS': 'django_redis.client.DefaultClient'},
     }
 }
 
@@ -277,10 +247,10 @@ CHANNEL_LAYERS = {
             'expiry': 3600,
             'channel_capacity': {
                 # Make sure no 'communicate' call is dropped.
-                manager_channels_re: 10000,
+                manager_channels_re: 10000
             },
         },
-    },
+    }
 }
 
 ASGI_APPLICATION = 'resolwe_server.routing.application'
@@ -301,42 +271,33 @@ TEST_PROCESS_PROFILE = False
 # Logging
 
 # In tests, log warning-level messages to the console, otherwise log info-level messages.
-console_handler_level = 'WARNING' if 'test' in sys.argv else 'INFO'  # pylint: disable=invalid-name
+console_handler_level = (
+    'WARNING' if 'test' in sys.argv else 'INFO'
+)  # pylint: disable=invalid-name
 
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
         'standard': {
-            'format': '%(asctime)s - %(levelname)s - %(name)s[%(process)s]: %(message)s',
-        },
+            'format': '%(asctime)s - %(levelname)s - %(name)s[%(process)s]: %(message)s'
+        }
     },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
             'level': console_handler_level,
             'formatter': 'standard',
-        },
+        }
     },
     'loggers': {
-        '': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-        'raven': {
-            'level': 'WARNING',
-            'handlers': ['console'],
-            'propagate': False,
-        },
+        '': {'handlers': ['console'], 'level': 'DEBUG'},
+        'raven': {'level': 'WARNING', 'handlers': ['console'], 'propagate': False},
         'elasticsearch': {
             'handlers': ['console'],
             'level': 'WARNING',
             'propagate': False,
         },
-        'urllib3': {
-            'handlers': ['console'],
-            'level': 'WARNING',
-            'propagate': False,
-        },
-    }
+        'urllib3': {'handlers': ['console'], 'level': 'WARNING', 'propagate': False},
+    },
 }

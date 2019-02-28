@@ -4,6 +4,7 @@ from resolwe.process import FileField, Cmd
 
 class UploadFile(process.Process):
     """ Process description. """
+
     slug = 'file_upload'
     name = 'File upload'
     category = 'upload'
@@ -12,11 +13,7 @@ class UploadFile(process.Process):
     data_name = '{{ input_file.file|default("?") }}'
     requirements = {
         'expression-engine': 'jinja',
-        'executor': {
-            'docker': {
-                'image': 'resolwe/base:ubuntu-18.04',
-            }
-        }
+        'executor': {'docker': {'image': 'resolwe/base:ubuntu-18.04'}},
     }
 
     def update_descriptor(self, **kwargs):
