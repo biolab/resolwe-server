@@ -1,0 +1,21 @@
+celery==4.1.1
+Django~=1.11.6
+djangorestframework~=3.7.0
+djangorestframework-filters==0.10.1
+django-filter==1.0.4
+django-priority-batch>=1.0.0
+# XXX: Required due to issue https://github.com/pypa/pip/issues/4905.
+resolwe>=14.0a1,==14.*
+resolwe-bio>=16.0a1,==16.*
+redis~=2.10.5
+django-redis==4.3.0
+django-cors-headers==1.1.0
+django-rest-auth==0.9.0
+elasticsearch-dsl~=5.4.0
+jsonschema==2.5.1
+statistics==1.0.3.5
+raven==6.1.0
+channels~=2.1
+channels_redis~=2.3
+requests~=2.20.1
+openpyxl~=2.5.5

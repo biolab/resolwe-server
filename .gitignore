@@ -1,0 +1,61 @@
+# Ignore temporary editor files.
+.*.sw[po]
+*~
+.DS_Store
+
+# Ignore pyenv files.
+.python-version
+
+# Ignore project files.
+*.pyproj
+*.sublime-project
+*.sublime-workspace
+.idea
+.vscode
+
+# Ignore binaries.
+*.py[cod]
+__pycache__
+
+
+# Ignore compiled static files and tools.
+/static
+/tools
+
+# Ignore local temporary directory.
+.tmp
+
+# Ignore Vagrant directory
+/.vagrant/
+
+# Ignore local settings
+genesis/settings/local.py
+
+# Ignore resolwe-server' (testing) data and upload directories' contents
+data/data/**
+!data/data/.gitkeep
+data/upload/**
+!data/upload/.gitkeep
+data/test_data/**
+!data/test_data/.gitkeep
+data/test_upload/**
+!data/test_upload/.gitkeep
+data/runtime/**
+!data/runtime/.gitkeep
+
+# Ignore reports dir
+/.reports/
+
+# Ignore whoosh index
+whoosh_index
+
+# Ignore files created by setup.py.
+build/
+dist/
+MANIFEST
+*.egg-info
+*.egg
+distribute*.tar.gz
+
+# Ignore tox temporary directory.
+.tox
