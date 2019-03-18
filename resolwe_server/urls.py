@@ -32,7 +32,7 @@ api_router.register(r'group', base_views.GroupViewSet, 'group')
 
 urlpatterns = [  # pylint: disable=invalid-name
     url(r'^api/base/', include('resolwe_server.base.urls')),
-    # url(r'^api/queryobserver/', include('rest_framework_reactive.api_urls')),
+    url(r'^api/queryobserver/', include('rest_framework_reactive.api_urls')),
     url(r'^api/', include(api_router.urls, namespace='resolwe-api')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^rest-auth/', include('rest_auth.urls')),
