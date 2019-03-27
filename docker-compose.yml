@@ -1,5 +1,5 @@
 postgresql:
-    image: postgres:9.4
+    image: postgres:10
     environment:
         POSTGRES_USER: resolwe-server
         POSTGRES_DB: resolwe-server
