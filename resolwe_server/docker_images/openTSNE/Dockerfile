@@ -20,11 +20,6 @@ RUN apt-get update && \
     	echo "Installing Python toolss..." && \
         pip3 install --require-hashes --requirement /home/packages-tools.txt ;\
     fi && \
-    echo "Cleaning up packages..." && \
-    if [ -f /home/packages-system.txt ]; then \
-        sed -e 's/^#.*$//g' -e '/^$/d' /home/packages-system.txt | \
-            xargs apt-get -y purge ;\
-    fi && \
     apt-get autoremove --purge -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
