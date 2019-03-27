@@ -7,15 +7,8 @@ from resolwe.flow.consumers import PurgeConsumer
 from resolwe.flow.managers.consumer import ManagerConsumer
 from resolwe.flow.managers.state import MANAGER_CONTROL_CHANNEL
 from resolwe.flow.protocol import CHANNEL_PURGE_WORKER
-from rest_framework_reactive.consumers import (
-    ClientConsumer,
-    PollObserversConsumer,
-    WorkerConsumer,
-)
-from rest_framework_reactive.protocol import (
-    CHANNEL_POLL_OBSERVER,
-    CHANNEL_WORKER_NOTIFY,
-)
+from rest_framework_reactive.consumers import ClientConsumer, MainConsumer, WorkerConsumer
+from rest_framework_reactive.protocol import CHANNEL_MAIN, CHANNEL_WORKER
 
 application = ProtocolTypeRouter(
     {  # pylint: disable=invalid-name
@@ -31,8 +24,8 @@ application = ProtocolTypeRouter(
         'channel': ChannelNameRouter(
             {
                 MANAGER_CONTROL_CHANNEL: ManagerConsumer,
-                CHANNEL_POLL_OBSERVER: PollObserversConsumer,
-                CHANNEL_WORKER_NOTIFY: WorkerConsumer,
+                CHANNEL_MAIN: MainConsumer,
+                CHANNEL_WORKER: WorkerConsumer,
                 CHANNEL_PURGE_WORKER: PurgeConsumer,
             }
         ),
