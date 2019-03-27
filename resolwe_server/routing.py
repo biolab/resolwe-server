@@ -7,7 +7,11 @@ from resolwe.flow.consumers import PurgeConsumer
 from resolwe.flow.managers.consumer import ManagerConsumer
 from resolwe.flow.managers.state import MANAGER_CONTROL_CHANNEL
 from resolwe.flow.protocol import CHANNEL_PURGE_WORKER
-from rest_framework_reactive.consumers import ClientConsumer, MainConsumer, WorkerConsumer
+from rest_framework_reactive.consumers import (
+    ClientConsumer,
+    MainConsumer,
+    WorkerConsumer,
+)
 from rest_framework_reactive.protocol import CHANNEL_MAIN, CHANNEL_WORKER
 
 application = ProtocolTypeRouter(
