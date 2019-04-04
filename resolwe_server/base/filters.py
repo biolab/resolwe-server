@@ -1,4 +1,6 @@
 """Django filters."""
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.core.exceptions import FieldDoesNotExist
@@ -6,7 +8,9 @@ from django.db import connection
 from django.db.models.expressions import RawSQL
 
 from rest_framework.filters import OrderingFilter
-import rest_framework_filters as filters
+import django_filters as filters
+
+from resolwe.flow.filters import NUMBER_LOOKUPS, TEXT_LOOKUPS
 
 
 class JsonOrderingFilter(OrderingFilter):
@@ -79,27 +83,34 @@ class JsonOrderingFilter(OrderingFilter):
 class GroupFilter(filters.FilterSet):
     """Filter the Group endpoint."""
 
-    id = filters.AllLookupsFilter()  # pylint: disable=invalid-name
-    name = filters.AllLookupsFilter()
-
     class Meta:
         """Filter configuration."""
 
         model = Group
-        fields = ['id', 'name']
+        fields = {
+            'id': NUMBER_LOOKUPS[:],
+            'name': TEXT_LOOKUPS[:],
+        }
 
 
 class UserFilter(filters.FilterSet):
     """Filter the User endpoint."""
 
-    id = filters.AllLookupsFilter()  # pylint: disable=invalid-name
-    username = filters.AllLookupsFilter()
-    first_name = filters.AllLookupsFilter()
-    last_name = filters.AllLookupsFilter()
-    groups = filters.RelatedFilter(GroupFilter, queryset=Group.objects.all())
+    job_title = filters.CharFilter(field_name='profile__job_title')
+    company = filters.CharFilter(field_name='profile__company')
+    department = filters.CharFilter(field_name='profile__department')
+    location = filters.CharFilter(field_name='profile__location')
+    lab = filters.CharFilter(field_name='profile__lab')
+    newsletter = filters.rest_framework.filters.BooleanFilter(field_name='profile__newsletter')
+    groups = filters.ModelChoiceFilter(queryset=Group.objects.all())
 
     class Meta:
         """Filter configuration."""
 
         model = get_user_model()
-        fields = ['id', 'username', 'first_name', 'last_name', 'groups']
+        fields = {
+            'id': NUMBER_LOOKUPS[:],
+            'username': TEXT_LOOKUPS[:],
+            'first_name': TEXT_LOOKUPS[:],
+            'last_name': TEXT_LOOKUPS[:],
+        }
