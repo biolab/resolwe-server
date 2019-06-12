@@ -33,7 +33,8 @@ setup(
     license='Apache License (2.0)',
     version=VERSION,
     # exclude tests from built/installed package
-    packages=find_packages(exclude=['tests', 'tests.*', '*.tests', '*.tests.*']),
+    packages=find_packages(
+        exclude=['tests', 'tests.*', '*.tests', '*.tests.*']),
     package_data={
         'resolwe_server': [
             'descriptors/*.yml',
@@ -45,7 +46,7 @@ setup(
         ]
     },
     install_requires=INSTALL_REQUIRES,
-    python_requires='>=3.6, <3.7',
+    python_requires='>=3.6, <3.8',
     extras_require={},
     classifiers=[
         'Intended Audience :: Education',
@@ -57,6 +58,7 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
     ],
     keywords='orange resolwe server bioinformatics singlecell dataflow django',
 )
