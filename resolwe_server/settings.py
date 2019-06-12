@@ -122,13 +122,11 @@ CORS_ALLOW_HEADERS = (
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django_db_geventpool.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'resolwe-server',
         'USER': 'resolwe-server',
         'HOST': 'localhost',
         'PORT': 55432,
-        'CONN_MAX_AGE': 0,
-        'OPTIONS': {'MAX_CONNS': 20},
     }
 }
 
@@ -214,7 +212,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_FILTER_BACKENDS': (
-        'rest_framework_filters.backends.DjangoFilterBackend',
+        'django_filters.rest_framework.backends.DjangoFilterBackend',
+        'rest_framework.filters.OrderingFilter',
         'resolwe_server.base.filters.JsonOrderingFilter',
         'resolwe.permissions.filters.ResolwePermissionsFilter',
     ),

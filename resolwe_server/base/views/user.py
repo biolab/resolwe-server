@@ -13,7 +13,7 @@ from rest_framework import serializers, viewsets, mixins, status, permissions
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
-from rest_framework_filters.backends import DjangoFilterBackend
+from django_filters.rest_framework.backends import DjangoFilterBackend
 
 from ..filters import GroupFilter, UserFilter
 
@@ -164,7 +164,8 @@ class UserViewSet(
                     {'error': "User does not exist."}, status=status.HTTP_404_NOT_FOUND
                 )
 
-            send_reset_email(user, community=serializer.data.get('community', None))
+            send_reset_email(
+                user, community=serializer.data.get('community', None))
             return Response({})
         else:
             return Response(
@@ -178,7 +179,8 @@ class UserViewSet(
         serializer = PasswordResetSerializer(data=request.data)
         if serializer.is_valid():
             try:
-                reset_password(serializer.data['token'], serializer.data['password'])
+                reset_password(
+                    serializer.data['token'], serializer.data['password'])
                 return Response({})
             except ValueError:
                 return Response(
