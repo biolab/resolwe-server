@@ -32,7 +32,6 @@ INSTALLED_APPS = [
     'rest_framework_reactive',
     'rest_auth',
     'guardian',
-    'mathfilters',
     'versionfield',
     'corsheaders',
     'channels',
@@ -103,7 +102,8 @@ STATIC_URL = '/static/'
 
 # CORS
 
-CORS_ORIGIN_REGEX_WHITELIST = (r'^(https?:\/\/)?(\w+\.)?(localhost|127.0.0.1)(:\d+)$',)
+CORS_ORIGIN_REGEX_WHITELIST = (
+    r'^(https?:\/\/)?(\w+\.)?(localhost|127.0.0.1)(:\d+)$',)
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -189,11 +189,14 @@ FLOW_PROCESSES_FINDERS = (
     'resolwe.flow.finders.AppDirectoriesFinder',
 )
 
-FLOW_PROCESSES_DIRS = (os.path.join(PROJECT_ROOT, 'resolwe_server', 'processes'),)
+FLOW_PROCESSES_DIRS = (os.path.join(
+    PROJECT_ROOT, 'resolwe_server', 'processes'),)
 
-FLOW_DESCRIPTORS_DIRS = (os.path.join(PROJECT_ROOT, 'resolwe_server', 'descriptors'),)
+FLOW_DESCRIPTORS_DIRS = (os.path.join(
+    PROJECT_ROOT, 'resolwe_server', 'descriptors'),)
 
-RESOLWE_CUSTOM_TOOLS_PATHS = [os.path.join(PROJECT_ROOT, 'resolwe_server', 'tools')]
+RESOLWE_CUSTOM_TOOLS_PATHS = [os.path.join(
+    PROJECT_ROOT, 'resolwe_server', 'tools')]
 
 FLOW_DOCKER_VOLUME_EXTRA_OPTIONS = {
     'data': 'Z',
