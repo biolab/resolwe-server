@@ -1,6 +1,6 @@
 # XXX: Required due to issue https://github.com/pypa/pip/issues/4905.
-resolwe>=15.0.1,==15.*
-resolwe-bio>=17.0.0,==17.*
+resolwe>=17.0a1,==17.*
+resolwe-bio>=20.0a1,==20.*
 
 redis~=3.2.1
 celery==4.1.1
