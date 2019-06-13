@@ -32,7 +32,6 @@ INSTALLED_APPS = [
     'rest_framework_reactive',
     'rest_auth',
     'guardian',
-    'mathfilters',
     'versionfield',
     'corsheaders',
     'channels',
@@ -103,7 +102,8 @@ STATIC_URL = '/static/'
 
 # CORS
 
-CORS_ORIGIN_REGEX_WHITELIST = (r'^(https?:\/\/)?(\w+\.)?(localhost|127.0.0.1)(:\d+)$',)
+CORS_ORIGIN_REGEX_WHITELIST = (
+    r'^(https?:\/\/)?(\w+\.)?(localhost|127.0.0.1)(:\d+)$',)
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -122,13 +122,11 @@ CORS_ALLOW_HEADERS = (
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django_db_geventpool.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'resolwe-server',
         'USER': 'resolwe-server',
         'HOST': 'localhost',
         'PORT': 55432,
-        'CONN_MAX_AGE': 0,
-        'OPTIONS': {'MAX_CONNS': 20},
     }
 }
 
@@ -189,11 +187,14 @@ FLOW_PROCESSES_FINDERS = (
     'resolwe.flow.finders.AppDirectoriesFinder',
 )
 
-FLOW_PROCESSES_DIRS = (os.path.join(PROJECT_ROOT, 'resolwe_server', 'processes'),)
+FLOW_PROCESSES_DIRS = (os.path.join(
+    PROJECT_ROOT, 'resolwe_server', 'processes'),)
 
-FLOW_DESCRIPTORS_DIRS = (os.path.join(PROJECT_ROOT, 'resolwe_server', 'descriptors'),)
+FLOW_DESCRIPTORS_DIRS = (os.path.join(
+    PROJECT_ROOT, 'resolwe_server', 'descriptors'),)
 
-RESOLWE_CUSTOM_TOOLS_PATHS = [os.path.join(PROJECT_ROOT, 'resolwe_server', 'tools')]
+RESOLWE_CUSTOM_TOOLS_PATHS = [os.path.join(
+    PROJECT_ROOT, 'resolwe_server', 'tools')]
 
 FLOW_DOCKER_VOLUME_EXTRA_OPTIONS = {
     'data': 'Z',
@@ -211,7 +212,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_FILTER_BACKENDS': (
-        'rest_framework_filters.backends.DjangoFilterBackend',
+        'django_filters.rest_framework.backends.DjangoFilterBackend',
+        'rest_framework.filters.OrderingFilter',
         'resolwe_server.base.filters.JsonOrderingFilter',
         'resolwe.permissions.filters.ResolwePermissionsFilter',
     ),
