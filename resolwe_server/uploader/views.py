@@ -45,7 +45,8 @@ def upload_lock(upload_function):
 
         upload_id = get_upload_id(session_id, file_uid, settings.SECRET_KEY)
 
-        filetemp = os.path.join(settings.FLOW_EXECUTOR['UPLOAD_DIR'], upload_id)
+        filetemp = os.path.join(
+            settings.FLOW_EXECUTOR['UPLOAD_DIR'], upload_id)
         lock_fn = '{}.lock'.format(filetemp)
         lock_fd = None
         try:
@@ -119,7 +120,8 @@ def file_download(request, data_id, uri, token=None, gzip_header=False):
     if token is not None:
         # Copy the token to the authentication header if it was send in the URL.
         b64_credentials = base64.b64encode(b'token:' + token.encode('utf-8'))
-        request.META['HTTP_AUTHORIZATION'] = 'Basic ' + b64_credentials.decode('utf-8')
+        request.META['HTTP_AUTHORIZATION'] = 'Basic ' + \
+            b64_credentials.decode('utf-8')
         request.META['PATH_INFO'] = '/data/{}/{}'.format(data_id, uri)
 
     # There are some differences between Nginx and Django handling of the request.
@@ -146,8 +148,8 @@ def file_download(request, data_id, uri, token=None, gzip_header=False):
             return None
 
     uri = uri.lstrip('/')  # prevent accessing parent directories
-
-    filename = os.path.join(settings.FLOW_EXECUTOR['DATA_DIR'], data_id, uri)
+    filename = os.path.join(
+        settings.FLOW_EXECUTOR['DATA_DIR'], str(data_id), uri)
     if not os.path.exists(filename):
         raise Http404()
 
