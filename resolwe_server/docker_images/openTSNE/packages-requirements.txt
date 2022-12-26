@@ -1,6 +1,6 @@
 # Build requirements
 setuptools==40.8.0 --hash=sha256:e8496c0079f3ac30052ffe69b679bd876c5265686127a3159cfa415669b7f9ab
-wheel==0.33.1 --hash=sha256:8eb4a788b3aec8abf5ff68d4165441bc57420c9f64ca5f471f58c3969fe08668
+wheel==0.38.1 --hash=sha256:7a95f9a8dc0924ef318bd55b616112c70903192f524d120acc614f59547a9e1f --hash=sha256:ea041edf63f4ccba53ad6e035427997b3bb10ee88a4cd014ae82aeb9eea77bb9
 
 # Install requirements
 numpy==1.16.2 --hash=sha256:23cc40313036cffd5d1873ef3ce2e949bdee0646c5d6f375bf7ee4f368db2511
